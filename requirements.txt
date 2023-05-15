@@ -1,0 +1,6 @@
+ffmpeg-python==0.2.0
+picamera==1.13
+requests==2.30.0
+schedule==1.2.0
+urllib3==2.0.2
+python-dotenv==0.21.1

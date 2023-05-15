@@ -1,0 +1,10 @@
+# Environments
+.env
+venv/
+
+# Byte-compiled
+__pycache__/
+
+# Temp files
+images/
+logs/
