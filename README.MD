@@ -38,7 +38,7 @@ sudo raspi-config
 - [ ] Дописать
 
 ### Пример
-![Пример](https://github.com/podlev/timelapse_project/example/timelapse.gif)
+![Пример](example/timelapse.gif)
 
 ### Автор
 Telegram: [Лев Подъельников](https://t.me/podlev)
