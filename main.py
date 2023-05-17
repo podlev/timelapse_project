@@ -1,5 +1,6 @@
 import logging
 import time
+import RPi.GPIO as GPIO
 
 import ffmpeg
 import requests
@@ -11,7 +12,7 @@ from settings import (
     IMAGES_MINUTES_INTERVAL,
     TIMELAPSE_CREATE_TIME,
     TELEGRAM_URL,
-    TELEGRAM_USER_ID, TIMELAPSE_SEND_TIME, DELETE_FILES_TIME
+    TELEGRAM_USER_ID, TIMELAPSE_SEND_TIME, DELETE_FILES_TIME, WITH_FLASH
 )
 from utils import (
     delete_files_and_directory,
@@ -39,11 +40,18 @@ def send_timelapse():
         logging.error(f'Error while sent video: {e}')
 
 
-def create_image():
+def create_image(with_flash=False):
     image_file = get_image_file().as_posix()
     try:
         camera.annotate_text = get_annotate_text()
-        camera.capture(image_file)
+        if with_flash:
+            GPIO.output(17, GPIO.HIGH)
+            time.sleep(0.5)
+            camera.capture(image_file)
+            time.sleep(0.5)
+            GPIO.output(17, GPIO.LOW)
+        else:
+            camera.capture(image_file)
         logging.info(f'Create image success: {image_file}')
     except Exception as e:
         logging.error(f'Create image error: {e}')
@@ -66,10 +74,12 @@ def create_timelapse(file=None, directory=None):
 
 
 if __name__ == '__main__':
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(17, GPIO.OUT)
     configure_logging()
     logging.info('Start timelapse project')
 
-    schedule.every(IMAGES_MINUTES_INTERVAL).minutes.do(create_image)
+    schedule.every(IMAGES_MINUTES_INTERVAL).minutes.do(create_image, with_flash=WITH_FLASH)
     schedule.every().day.at(TIMELAPSE_CREATE_TIME).do(create_timelapse)
     schedule.every().day.at(TIMELAPSE_SEND_TIME).do(send_timelapse)
     schedule.every().day.at(DELETE_FILES_TIME).do(delete_files_and_directory)

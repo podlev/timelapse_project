@@ -23,3 +23,5 @@ DELETE_FILES_TIME = "16:58"
 ANNOTATE_FORMAT = "%d.%m.%Y %H:%M"
 IMAGE_FILE_NAME = "%d.%m.%Y %H:%M.jpg"
 TIMELAPSE_FILE_NAME = 'timelapse.mp4'
+
+WITH_FLASH = True
